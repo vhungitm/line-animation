@@ -1,38 +1,79 @@
-.App {
-  text-align: center;
+body {
+	padding: 500px 50px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.itm-line {
+	position: relative;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.itm-line-svg {
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.itm-line-path {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	z-index: 1;
 }
 
-.App-link {
-  color: #61dafb;
+.itm-line-path-active {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	z-index: 2;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.item-1 {
+	height: 3000px;
+	background: red;
+}
+
+.item-2 {
+	height: 100px;
+	background: blue;
+}
+
+.item-3 {
+	height: 200px;
+	background: orange;
+}
+
+.item-4 {
+	height: 300px;
+	background: yellow;
+}
+
+.item-6 {
+	height: 300px;
+	background: black;
+}
+
+.item-7 {
+	height: 2000px;
+	background: red;
+}
+
+.item-8 {
+	height: 200px;
+	background: blue;
+}
+
+.item-9 {
+	height: 300px;
+	background: orange;
+}
+
+.item-10 {
+	height: 700px;
+	background: yellow;
+}
+
+.item-11 {
+	height: 300px;
+	background: black;
 }
