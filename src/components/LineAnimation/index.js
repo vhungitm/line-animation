@@ -15,13 +15,10 @@ const LineAnimation = () => {
 				const top = lineItems[0].getBoundingClientRect().top;
 				const center = window.innerHeight / 2;
 				const height = center - top;
-				console.log({ center, top, height });
 
 				if (index === lineItems.length - 1) {
-					if (isActive && oldY > height) {
-						d += `V ${height}`;
-						return d;
-					} else d += `V${oldY + 140}`;
+					if (isActive && oldY > height) return (d += `V ${height}`);
+					else d += `V${oldY + 140}`;
 				} else {
 					const itemWidth = item.offsetWidth;
 
