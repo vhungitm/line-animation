@@ -40,11 +40,11 @@ const App = () => {
 					</defs>
 				</svg>
 
-				<div className="itm-line-item item-1">a</div>
-				<div className="itm-line-item item-2">a</div>
-				<div className="itm-line-item item-3">a</div>
-				<div className="itm-line-item item-6">a</div>
-				<div className="itm-line-item item-4">a</div>
+				<div className="itm-line-item item-1"></div>
+				<div className="itm-line-item item-2"></div>
+				<div className="itm-line-item item-3"></div>
+				<div className="itm-line-item item-6"></div>
+				<div className="itm-line-item item-4"></div>
 			</div>
 			<div className="itm-line">
 				<svg className="itm-line-svg" viewBox="0 0 1568 10866" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,11 +77,11 @@ const App = () => {
 					</defs>
 				</svg>
 
-				<div className="itm-line-item item-7">a</div>
-				<div className="itm-line-item item-8">a</div>
-				<div className="itm-line-item item-9">a</div>
-				<div className="itm-line-item item-10">a</div>
-				<div className="itm-line-item item-11">a</div>
+				<div className="itm-line-item item-7"></div>
+				<div className="itm-line-item item-8"></div>
+				<div className="itm-line-item item-9"></div>
+				<div className="itm-line-item item-10"></div>
+				<div className="itm-line-item item-11"></div>
 			</div>
 		</div>
 	);

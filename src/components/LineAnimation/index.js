@@ -1,19 +1,5 @@
 const LineAnimation = () => {
-	const checkActive = pathActive => {
-		const totalLength = pathActive.getTotalLength();
-		const center = window.innerHeight / 2;
-		const boundaries = pathActive.getBoundingClientRect();
-		const top = boundaries.top;
-		const height = boundaries.height;
-		const percentage = (center - top) / height;
-		const drawLength = percentage > 0 ? totalLength * percentage : 0;
-		const offset = drawLength < totalLength ? totalLength - drawLength : 0;
-
-		pathActive.setAttribute('stroke-dasharray', totalLength);
-		pathActive.setAttribute('stroke-dashoffset', offset);
-	};
-
-	const getPathData = (lineItems, pathWidth) => {
+	const getPathData = (lineItems, pathWidth, isActive) => {
 		lineItems = Object.values(lineItems);
 
 		let d = '';
@@ -25,9 +11,18 @@ const LineAnimation = () => {
 			if (index === 0) d += `M${pathWidth} 0`;
 
 			if (lineItems.length > 0) {
-				if (index === lineItems.length - 1) d += `V${oldY + 140}`;
-				else {
-					oldY = oldY + item.offsetHeight;
+				oldY = oldY + item.offsetHeight;
+				const top = lineItems[0].getBoundingClientRect().top;
+				const center = window.innerHeight / 2;
+				const height = center - top;
+				console.log({ center, top, height });
+
+				if (index === lineItems.length - 1) {
+					if (isActive && oldY > height) {
+						d += `V ${height}`;
+						return d;
+					} else d += `V${oldY + 140}`;
+				} else {
 					const itemWidth = item.offsetWidth;
 
 					const c1 = index % 2 === 0 ? pathWidth : itemWidth - pathWidth;
@@ -44,9 +39,14 @@ const LineAnimation = () => {
 						c6 = index % 2 === 0 ? (itemWidth - 2) / 2 + radius * 2 : (itemWidth - 2) / 2 - radius * 2;
 					}
 
-					d += `V ${oldY - radius * 2} C ${c1} ${
-						oldY - radius
-					} ${c2} ${oldY} ${c3} ${oldY} H ${c4} C ${c5} ${oldY} ${c6} ${oldY + radius} ${c6} ${oldY + radius * 2}`;
+					// Draw path
+					d += `V `;
+
+					if (isActive && oldY > height) return (d += height);
+					else d += `${oldY - radius * 2}`;
+
+					d += ` C ${c1} ${oldY - radius} ${c2} ${oldY} ${c3} ${oldY} H ${c4}`;
+					d += ` C ${c5} ${oldY} ${c6} ${oldY + radius} ${c6} ${oldY + radius * 2}`;
 				}
 			}
 		});
@@ -67,13 +67,11 @@ const LineAnimation = () => {
 		const pathMaxWidth = pathWidth > pathActiveWidth ? pathWidth : pathActiveWidth;
 
 		const dPath = getPathData(lineItems, pathMaxWidth);
-		const dPathActive = getPathData(lineItems, pathMaxWidth);
+		const dPathActive = getPathData(lineItems, pathMaxWidth, true);
 
 		svg.setAttribute('viewBox', `0 0 ${itemRect.width} ${itemRect.height}`);
 		path.setAttribute('d', dPath);
 		pathActive.setAttribute('d', dPathActive);
-
-		checkActive(pathActive);
 	};
 
 	const init = () => {
