@@ -28,12 +28,27 @@ body {
 	z-index: 2;
 }
 
+.itm-line-point {
+	font-weight: 700;
+	font-size: 80px;
+	line-height: 120px;
+}
+
+.itm-line-container {
+	padding: 84px;
+}
+
+.itm-line-container:nth-child(2) {
+	padding-top: 0;
+}
+
 .item-1 {
-	height: 3000px;
+	height: 200px;
 }
 
 .item-2 {
 	height: 100px;
+	margin-right: 100px;
 }
 
 .item-3 {

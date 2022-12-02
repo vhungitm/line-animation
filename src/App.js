@@ -40,7 +40,9 @@ const App = () => {
 					</defs>
 				</svg>
 
-				<div className="itm-line-container item-1"></div>
+				<div className="itm-line-container item-1">
+					<div className="itm-line-point">2021</div>
+				</div>
 				<div className="itm-line-container item-2"></div>
 				<div className="itm-line-container item-3"></div>
 				<div className="itm-line-container item-6"></div>

@@ -1,5 +1,5 @@
 const LineAnimation = () => {
-	const getPathData = (containerItems, pathWidth, isActive) => {
+	const getPathData = (lineItemRect, containerItems, pathWidth, isActive) => {
 		containerItems = Object.values(containerItems);
 
 		let d = '';
@@ -7,33 +7,42 @@ const LineAnimation = () => {
 		const radius = parseFloat(5);
 		pathWidth /= 2;
 
-		containerItems.forEach((item, index) => {
+		containerItems.forEach((containerItem, index) => {
+			const containerItemRect = containerItem.getBoundingClientRect();
+
 			if (index === 0) d += `M ${pathWidth} 0`;
 
 			if (containerItems.length > 0) {
-				oldY = oldY + item.offsetHeight;
-				const top = containerItems[0].getBoundingClientRect().top;
+				oldY = oldY + containerItem.offsetHeight;
+				const top = lineItemRect.top;
 				const center = window.innerHeight / 2;
 				const height = center - top;
 
 				if (index === containerItems.length - 1) {
 					if (isActive && oldY > height) return (d += `V ${height}`);
-					else d += `V ${oldY + 140}`;
+					else d += ` V ${oldY + 140}`;
 				} else {
-					const itemWidth = item.offsetWidth;
+					const right = containerItemRect.right - lineItemRect.left;
+					const left = containerItemRect.left - lineItemRect.left;
 
-					const c1 = index % 2 === 0 ? pathWidth : itemWidth - pathWidth;
-					const c2 = index % 2 === 0 ? pathWidth + radius : itemWidth - pathWidth - radius;
-					const c3 = index % 2 === 0 ? pathWidth + radius * 2 : itemWidth - pathWidth - radius * 2;
+					const nextItem = containerItems[index + 1];
+					const nextItemRect = nextItem.getBoundingClientRect();
+					const nextItemRight = nextItemRect.right - lineItemRect.left;
+					const nextItemLeft = nextItemRect.left - lineItemRect.left;
 
-					let c4 = index % 2 === 0 ? itemWidth - pathWidth - radius * 2 : pathWidth + radius * 2;
-					let c5 = index % 2 === 0 ? itemWidth - pathWidth - radius : pathWidth + radius;
-					let c6 = index % 2 === 0 ? itemWidth - pathWidth : pathWidth;
+					const c1 = index % 2 === 0 ? left + pathWidth : right - pathWidth;
+					const c2 = index % 2 === 0 ? left + pathWidth + radius : right - pathWidth - radius;
+					const c3 = index % 2 === 0 ? left + pathWidth + radius * 2 : right - pathWidth - radius * 2;
+
+					let c4 = index % 2 === 0 ? nextItemRight - pathWidth - radius * 2 : nextItemLeft + pathWidth + radius * 2;
+					let c5 = index % 2 === 0 ? nextItemRight - pathWidth - radius : nextItemLeft + pathWidth + radius;
+					let c6 = index % 2 === 0 ? nextItemRight - pathWidth : nextItemLeft + pathWidth;
 
 					if (index === containerItems.length - 2) {
-						c4 = itemWidth / 2;
-						c5 = index % 2 === 0 ? (itemWidth - 2) / 2 + radius : (itemWidth - 2) / 2 - radius;
-						c6 = index % 2 === 0 ? (itemWidth - 2) / 2 + radius * 2 : (itemWidth - 2) / 2 - radius * 2;
+						c4 = lineItemRect.width / 2;
+						c5 = index % 2 === 0 ? (lineItemRect.width - 2) / 2 + radius : (lineItemRect.width - 2) / 2 - radius;
+						c6 =
+							index % 2 === 0 ? (lineItemRect.width - 2) / 2 + radius * 2 : (lineItemRect.width - 2) / 2 - radius * 2;
 					}
 
 					// Draw path
@@ -63,8 +72,8 @@ const LineAnimation = () => {
 		const pathActiveWidth = parseFloat(pathActive.getAttribute('stroke-width'));
 		const pathMaxWidth = pathWidth > pathActiveWidth ? pathWidth : pathActiveWidth;
 
-		const dPath = getPathData(containerItems, pathMaxWidth);
-		const dPathActive = getPathData(containerItems, pathMaxWidth, true);
+		const dPath = getPathData(lineItemRect, containerItems, pathMaxWidth);
+		const dPathActive = getPathData(lineItemRect, containerItems, pathMaxWidth, true);
 
 		svg.setAttribute('viewBox', `0 0 ${lineItemRect.width} ${lineItemRect.height}`);
 		path.setAttribute('d', dPath);
