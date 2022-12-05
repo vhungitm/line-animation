@@ -2,33 +2,7 @@ body {
 	padding: 500px 50px;
 }
 
-.itm-line {
-	position: relative;
-}
-
-.itm-line-svg {
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-
-.itm-line-path {
-	position: absolute;
-	left: 0;
-	top: 0;
-
-	z-index: 1;
-}
-
-.itm-line-path-active {
-	position: absolute;
-	left: 0;
-	top: 0;
-
-	z-index: 2;
-}
-
-.itm-line-point {
+.itm-line-ball {
 	font-weight: 700;
 	font-size: 80px;
 	line-height: 120px;
@@ -64,7 +38,7 @@ body {
 }
 
 .item-7 {
-	height: 2000px;
+	height: 300px;
 }
 
 .item-8 {

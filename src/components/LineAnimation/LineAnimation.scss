@@ -1,0 +1,25 @@
+.itm-line {
+	position: relative;
+}
+
+.itm-line-svg {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.itm-line-path {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	z-index: 1;
+}
+
+.itm-line-path-active {
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	z-index: 2;
+}

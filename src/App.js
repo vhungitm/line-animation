@@ -41,11 +41,28 @@ const App = () => {
 				</svg>
 
 				<div className="itm-line-container item-1">
-					<div className="itm-line-point">2021</div>
+					<div className="itm-line-ball" data-position="left">
+						2021
+					</div>
 				</div>
-				<div className="itm-line-container item-2"></div>
-				<div className="itm-line-container item-3"></div>
-				<div className="itm-line-container item-6"></div>
+				<div className="itm-line-container item-2">
+					<div className="itm-line-ball" data-position="top" style={{ marginLeft: 100 }}>
+						2020
+					</div>
+				</div>
+				<div className="itm-line-container item-3">
+					<div className="itm-line-ball">2019</div>
+				</div>
+				<div className="itm-line-container item-6">
+					<div className="itm-line-ball" data-position="right">
+						2018
+					</div>
+				</div>
+				<div className="itm-line-container item-7">
+					<div className="itm-line-ball" data-position="bottom">
+						2017
+					</div>
+				</div>
 				<div className="itm-line-container item-4"></div>
 			</div>
 			<div className="itm-line">

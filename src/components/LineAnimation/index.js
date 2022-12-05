@@ -1,7 +1,67 @@
-const LineAnimation = () => {
-	const getPathData = (lineItemRect, containerItems, pathWidth, isActive) => {
-		containerItems = Object.values(containerItems);
+import './LineAnimation.scss';
 
+const LineAnimation = () => {
+	const getBallHTML = (lineItemRect, containerItems, ball) => {
+		const top = lineItemRect.top;
+		const center = window.innerHeight / 2;
+
+		let html = '';
+
+		containerItems.forEach((containerItem, index) => {
+			const containerItemRect = containerItem.getBoundingClientRect();
+
+			let ballItems = containerItem.getElementsByClassName('itm-line-ball');
+			ballItems = Object.values(ballItems);
+
+			ballItems.forEach(ballItem => {
+				const ballItemRect = ballItem.getBoundingClientRect();
+				const dataPosition = ballItem.dataset.position || 'left';
+
+				const height =
+					dataPosition === 'top' || dataPosition === 'bottom'
+						? center - top - ball.width / 2
+						: center - top + ball.borderWidth / 2;
+
+				let x =
+					dataPosition === 'left'
+						? ball.borderWidth
+						: dataPosition === 'right'
+						? containerItemRect.right - lineItemRect.left - ball.width - ball.borderWidth
+						: dataPosition === 'top' || dataPosition === 'bottom'
+						? ballItemRect.left - lineItemRect.left
+						: 0;
+
+				let y =
+					dataPosition === 'left' || dataPosition === 'right'
+						? ballItemRect.bottom - ballItemRect.height / 2 - ball.width / 2 - lineItemRect.top + ball.borderWidth * 2
+						: dataPosition === 'top'
+						? containerItemRect.top - lineItemRect.top - ball.width / 2
+						: dataPosition === 'bottom'
+						? containerItemRect.bottom - lineItemRect.top - ball.width / 2
+						: 0;
+
+				const fillWidth = ball.width - ball.borderWidth * 4;
+				const isActive = height > y;
+
+				if (isActive) {
+					html += `<rect x="${x}" y="${y}" width="${ball.width}" height="${ball.width}" rx="${ball.width / 2}"`;
+					html += ` fill="white" stroke="${ball.activeBorderColor}" stroke-width="${ball.borderWidth}"/>`;
+
+					html += `<rect x="${x + ball.borderWidth * 2}" y="${y + ball.borderWidth * 2}"`;
+					html += ` width="${fillWidth}" height="${fillWidth}"`;
+					html += ` rx="${fillWidth / 2}" fill="${ball.activeFillColor}"/>`;
+				} else {
+					html += `<rect x="${x}" y="${y}" width="${ball.width}" height="${ball.width}"`;
+					html += ` rx="${ball.width / 2}" fill="${ball.fillColor}" `;
+					html += `stroke="${ball.borderColor}" stroke-width="${ball.borderWidth}"/>`;
+				}
+			});
+		});
+
+		return html;
+	};
+
+	const getPathData = (lineItemRect, containerItems, pathWidth, ballWidth, isActive) => {
 		let d = '';
 		let oldY = 0;
 		const radius = parseFloat(5);
@@ -10,7 +70,7 @@ const LineAnimation = () => {
 		containerItems.forEach((containerItem, index) => {
 			const containerItemRect = containerItem.getBoundingClientRect();
 
-			if (index === 0) d += `M ${pathWidth} 0`;
+			if (index === 0) d += `M ${pathWidth + ballWidth / 2} 0`;
 
 			if (containerItems.length > 0) {
 				oldY = oldY + containerItem.offsetHeight;
@@ -22,13 +82,13 @@ const LineAnimation = () => {
 					if (isActive && oldY > height) return (d += `V ${height}`);
 					else d += ` V ${oldY + 140}`;
 				} else {
-					const right = containerItemRect.right - lineItemRect.left;
-					const left = containerItemRect.left - lineItemRect.left;
+					const right = containerItemRect.right - lineItemRect.left - ballWidth / 2;
+					const left = containerItemRect.left - lineItemRect.left + ballWidth / 2;
 
 					const nextItem = containerItems[index + 1];
 					const nextItemRect = nextItem.getBoundingClientRect();
-					const nextItemRight = nextItemRect.right - lineItemRect.left;
-					const nextItemLeft = nextItemRect.left - lineItemRect.left;
+					const nextItemRight = nextItemRect.right - lineItemRect.left - ballWidth / 2;
+					const nextItemLeft = nextItemRect.left - lineItemRect.left + ballWidth / 2;
 
 					const c1 = index % 2 === 0 ? left + pathWidth : right - pathWidth;
 					const c2 = index % 2 === 0 ? left + pathWidth + radius : right - pathWidth - radius;
@@ -60,8 +120,17 @@ const LineAnimation = () => {
 		return d;
 	};
 
+	const clearBallHTML = svg => {
+		let rects = svg.getElementsByTagName('rect');
+		rects = Object.values(rects);
+
+		rects.forEach(rect => rect.remove());
+	};
+
 	const initChild = lineItem => {
 		let containerItems = lineItem.getElementsByClassName('itm-line-container');
+		containerItems = Object.values(containerItems);
+
 		const lineItemRect = lineItem.getBoundingClientRect();
 		const svg = lineItem.getElementsByClassName('itm-line-svg')[0];
 
@@ -71,13 +140,27 @@ const LineAnimation = () => {
 		const pathActive = lineItem.getElementsByClassName('itm-line-path-active')[0];
 		const pathActiveWidth = parseFloat(pathActive.getAttribute('stroke-width'));
 		const pathMaxWidth = pathWidth > pathActiveWidth ? pathWidth : pathActiveWidth;
+		const ball = {
+			width: 37,
+			borderWidth: 3,
 
-		const dPath = getPathData(lineItemRect, containerItems, pathMaxWidth);
-		const dPathActive = getPathData(lineItemRect, containerItems, pathMaxWidth, true);
+			fillColor: 'white',
+			activeFillColor: '#1EA0FF',
+
+			borderColor: '#1EA0FF',
+			activeBorderColor: '#1EA0FF'
+		};
+
+		const dPath = getPathData(lineItemRect, containerItems, pathMaxWidth, ball.width);
+		const dPathActive = getPathData(lineItemRect, containerItems, pathMaxWidth, ball.width, true);
 
 		svg.setAttribute('viewBox', `0 0 ${lineItemRect.width} ${lineItemRect.height}`);
 		path.setAttribute('d', dPath);
 		pathActive.setAttribute('d', dPathActive);
+
+		clearBallHTML(svg);
+		const BallHTML = getBallHTML(lineItemRect, containerItems, ball);
+		svg.innerHTML += BallHTML;
 	};
 
 	const init = () => {
