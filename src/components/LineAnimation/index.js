@@ -1,7 +1,5 @@
-import './LineAnimation.scss';
-
 const LineAnimation = props => {
-	const { id, speed, responsive, showFinalActive = false, ballPositions } = props;
+	const { id, startY = 0, speed, responsive, showFinalActive = false, ballPositions } = props;
 	const ball = props.ball || {
 		width: 37,
 		borderWidth: 3,
@@ -114,7 +112,7 @@ const LineAnimation = props => {
 		containerItems.forEach((containerItem, index) => {
 			const containerItemRect = containerItem.getBoundingClientRect();
 
-			if (index === 0) d += `M ${pathWidth + ball.width / 2} ${ball.width / 2 + ball.borderWidth / 2}`;
+			if (index === 0) d += `M ${pathWidth + ball.width / 2} ${startY + ball.width / 2 + ball.borderWidth / 2}`;
 
 			if (containerItems.length > 0) {
 				if (index === containerItems.length - 1) {
@@ -163,8 +161,8 @@ const LineAnimation = props => {
 	};
 
 	const getSpeed = () => {
-		if (responsive) return getResponsive()?.speed || speed || 1.4;
-		else return speed || 1.4;
+		if (responsive) return getResponsive()?.speed || speed || 2.4;
+		else return speed || 2.4;
 	};
 
 	const getPathActiveOffsetLength = pathActive => {
