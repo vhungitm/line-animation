@@ -1,12 +1,36 @@
 import './LineAnimation.scss';
 
 const LineAnimation = props => {
-	const { id } = props;
+	const { id, speed, responsive, showFinalActive = false, ballPositions } = props;
+	const ball = props.ball || {
+		width: 37,
+		borderWidth: 3,
+
+		fillColor: 'white',
+		activeFillColor: '#1EA0FF',
+
+		borderColor: '#1EA0FF',
+		activeBorderColor: '#1EA0FF'
+	};
+
+	const getResponsive = () => {
+		const screenWidth = window.innerWidth;
+		responsive.sort((a, b) => b.minWidth - a.minWidth);
+		const result = responsive.find(item => item.minWidth < screenWidth);
+
+		return result;
+	};
+
+	const getBallPosition = index => {
+		if (responsive) return getResponsive()?.ballPositions?.[index] || ballPositions?.[index] || 'left';
+		else return ballPositions?.[index] || 'left';
+	};
 
 	const getBallHTML = (lineItemRect, containerItems, ball, activePoint) => {
 		let html = '';
 		const fillWidth = ball.width - ball.borderWidth * 4;
 
+		let ballIndex = 0;
 		containerItems.forEach((containerItem, containerIndex) => {
 			const containerItemRect = containerItem.getBoundingClientRect();
 
@@ -15,8 +39,9 @@ const LineAnimation = props => {
 
 			ballItems.forEach(ballItem => {
 				const ballItemRect = ballItem.getBoundingClientRect();
-				const dataPosition = ballItem.dataset.position || 'left';
+				const dataPosition = getBallPosition(ballIndex);
 				const realIndex = dataPosition === 'top' ? containerIndex - 1 : containerIndex;
+				ballIndex++;
 
 				let x =
 					dataPosition === 'left'
@@ -66,16 +91,16 @@ const LineAnimation = props => {
 			});
 		});
 
-		html += `<rect x="${activePoint.x - ball.width / 2}" y="${activePoint.y - ball.width / 2}" `;
-		html += `width="${ball.width}" height="${ball.width}" rx="${ball.width / 2}"`;
-		html += ` fill="white" stroke="${ball.activeBorderColor}" stroke-width="${ball.borderWidth}"/>`;
+		if (showFinalActive) {
+			html += `<rect x="${activePoint.x - ball.width / 2}" y="${activePoint.y - ball.width / 2}" `;
+			html += `width="${ball.width}" height="${ball.width}" rx="${ball.width / 2}"`;
+			html += ` fill="white" stroke="${ball.activeBorderColor}" stroke-width="${ball.borderWidth}"/>`;
 
-		html += `<rect x="${activePoint.x - ball.width / 2 + ball.borderWidth * 2}" `;
-		html += `y="${activePoint.y - ball.width / 2 + ball.borderWidth * 2}"`;
-		html += ` width="${fillWidth}" height="${fillWidth}"`;
-		html += ` rx="${fillWidth / 2}" fill="${ball.activeFillColor}"/>`;
-
-		console.log(activePoint.y);
+			html += `<rect x="${activePoint.x - ball.width / 2 + ball.borderWidth * 2}" `;
+			html += `y="${activePoint.y - ball.width / 2 + ball.borderWidth * 2}"`;
+			html += ` width="${fillWidth}" height="${fillWidth}"`;
+			html += ` rx="${fillWidth / 2}" fill="${ball.activeFillColor}"/>`;
+		}
 
 		return html;
 	};
@@ -137,9 +162,14 @@ const LineAnimation = props => {
 		return d;
 	};
 
+	const getSpeed = () => {
+		if (responsive) return getResponsive()?.speed || speed || 1.4;
+		else return speed || 1.4;
+	};
+
 	const getPathActiveOffsetLength = pathActive => {
 		const totalLength = pathActive.getTotalLength();
-		const center = window.innerHeight / 2;
+		const center = window.innerHeight / getSpeed();
 		const boundaries = pathActive.getBoundingClientRect();
 		const { top, height } = boundaries;
 		const percentage = (center - top) / height;
@@ -152,7 +182,6 @@ const LineAnimation = props => {
 	const clearBallHTML = svg => {
 		let rects = svg.getElementsByTagName('rect');
 		rects = Object.values(rects);
-
 		rects.forEach(rect => rect.remove());
 	};
 
@@ -171,17 +200,6 @@ const LineAnimation = props => {
 		const pathActive = lineItem.getElementsByClassName('itm-line-path-active')[0];
 		const pathActiveWidth = parseFloat(pathActive.getAttribute('stroke-width'));
 		const pathMaxWidth = pathWidth > pathActiveWidth ? pathWidth : pathActiveWidth;
-
-		const ball = {
-			width: 37,
-			borderWidth: 3,
-
-			fillColor: 'white',
-			activeFillColor: '#1EA0FF',
-
-			borderColor: '#1EA0FF',
-			activeBorderColor: '#1EA0FF'
-		};
 
 		const dPath = getPathData(lineItemRect, containerItems, pathMaxWidth, ball);
 		const dPathActive = getPathData(lineItemRect, containerItems, pathMaxWidth, ball);
