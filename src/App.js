@@ -7,7 +7,7 @@ const App = () => {
 		LineAnimation({
 			id: 'line1',
 			speed: 5,
-			ballPositions: ['left', 'top', 'left', 'bottom', 'left'],
+			ballPositions: ['left', 'top', 'left', 'bottom', 'left', 'top'],
 			responsive: [
 				{ minWidth: 500, speed: 8, ballPositions: ['left', 'top', 'bottom'] },
 				{ minWidth: 700, speed: 1.5 },
@@ -45,31 +45,25 @@ const App = () => {
 				</svg>
 
 				<div className="itm-line-container item-1">
-					<div className="itm-line-ball" data-position="left">
-						2021
-					</div>
+					<div className="itm-line-ball">2021</div>
 				</div>
 				<div className="itm-line-container item-2">
-					<div className="itm-line-ball" data-position="top" style={{ marginLeft: 100 }}>
+					<div className="itm-line-ball" style={{ marginLeft: 100 }}>
 						2020
 					</div>
 				</div>
 				<div className="itm-line-container item-3">
-					<div className="itm-line-ball" data-position="top">
-						2019
-					</div>
+					<div className="itm-line-ball">2019</div>
 				</div>
 				<div className="itm-line-container item-6">
-					<div className="itm-line-ball" data-position="right">
-						2018
-					</div>
+					<div className="itm-line-ball">2018</div>
 				</div>
 				<div className="itm-line-container item-7">
-					<div className="itm-line-ball" data-position="bottom">
-						2017
-					</div>
+					<div className="itm-line-ball">2017</div>
 				</div>
-				<div className="itm-line-container item-4"></div>
+				<div className="itm-line-container item-4">
+					<div className="itm-line-ball">2016</div>
+				</div>
 			</div>
 		</div>
 	);
