@@ -22,8 +22,13 @@ const LineAnimation = props => {
 	};
 
 	const getBallPosition = index => {
-		if (responsive) return getResponsive()?.ballPositions?.[index] || ballPositions?.[index] || 'left';
-		else return ballPositions?.[index] || 'left';
+		let result = 'left';
+
+		if (responsive) result = getResponsive()?.ballPositions?.[index] || ballPositions?.split(',')?.[index] || 'left';
+		else result = ballPositions?.split(',')?.[index] || 'left';
+		result = result.trim();
+
+		return result;
 	};
 
 	const getTotalBall = containerItems => {
@@ -84,11 +89,11 @@ const LineAnimation = props => {
 				if (dataPosition === 'left' || dataPosition === 'right') {
 					isActive = activePoint.y >= y - ball.borderWidth / 2;
 				} else {
-					const ballY = parseInt((y + ball.width / 2).toFixed(0));
-					const activeY = parseInt(activePoint.y.toFixed(0));
+					const ballY = y + ball.width / 2;
+					const activeY = activePoint.y;
 
-					if (ballY < activeY) isActive = true;
-					else if (activeY === ballY) {
+					if (activeY - ballY > 5) isActive = true;
+					else if (Math.abs(activeY - ballY) <= 5) {
 						if (realIndex % 2 === 0) isActive = activePoint.x >= x - ball.borderWidth / 2;
 						else isActive = activePoint.x <= x + ball.width + ball.borderWidth / 2;
 					}
