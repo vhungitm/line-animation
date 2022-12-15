@@ -1,20 +1,18 @@
-import { useEffect } from 'react';
 import './App.css';
 import LineAnimation from './components/LineAnimation';
 
 const App = () => {
-	useEffect(() => {
-		LineAnimation({
-			id: 'line1',
-			speed: 5,
-			ballPositions: 'left, top, left, bottom, left, top',
-			responsive: [
-				{ minWidth: 500, speed: 8, ballPositions: 'left, top, left, bottom, left, top' },
-				{ minWidth: 700, speed: 1.5 },
-				{ minWidth: 600, speed: 1.5 }
-			]
-		});
-	}, []);
+	LineAnimation({
+		id: 'line1',
+		type: 1,
+		speed: 5,
+		ballPositions: 'left, top, left, bottom, left, right',
+		responsive: [
+			{ minWidth: 500, speed: 8, ballPositions: 'left, top, left, bottom, left, top' },
+			{ minWidth: 700, speed: 1.5 },
+			{ minWidth: 600, speed: 1.5 }
+		]
+	});
 
 	return (
 		<div>
